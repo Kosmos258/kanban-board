@@ -13,7 +13,7 @@ export default defineConfig([
     extends: [
       js.configs.recommended, // Базовые правила JS
       ...tseslint.configs.recommended, // Рекомендованные правила TS
-      reactHooks.configs.flat['recommended-latest'],  // Правила для React Hooks
+      reactHooks.configs.flat['recommended-latest'], // Правила для React Hooks
       reactRefresh.configs.vite, // Правила для Fast Refresh в Vite
       eslintConfigPrettier, // ОБЯЗАТЕЛЬНО ДОЛЖЕН БЫТЬ ПОСЛЕДНИМ, чтобы отключить конфликтующие правила
     ],
