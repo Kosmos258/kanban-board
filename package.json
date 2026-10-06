@@ -22,8 +22,10 @@
     ]
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.13.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-redux": "^9.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -38,7 +40,9 @@
     "globals": "^17.12.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
+    "msw": "^3.0.2",
     "prettier": "^3.9.9",
+    "sass-embedded": "^1.105.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.71.1",
     "vite": "^8.3.0"
