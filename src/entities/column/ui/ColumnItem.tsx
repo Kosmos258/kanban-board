@@ -1,7 +1,13 @@
-import type { Column } from '../model/types';
+import { useDroppable } from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { useAppSelector } from '@app/providers/store/hooks';
 import { CardItem } from '@entities/card/ui/CardItem';
-import { useDroppable } from '@dnd-kit/core';
+import { AddCardForm } from '@features/add-card/ui/AddCardForm';
+import type { Column } from '../model/types';
+import styles from './ColumnItem.module.scss';
 
 interface ColumnItemProps {
   column: Column;
@@ -14,29 +20,24 @@ export function ColumnItem({ column }: ColumnItemProps) {
     id: column.id,
   });
 
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        backgroundColor: isOver ? '#484d51' : '#4e5156',
-        borderRadius: '8px',
-        padding: '16px',
-        width: '300px',
-        flexShrink: 0,
-        border: '2px dashed transparent',
-        borderColor: isOver ? '#2196f3' : 'transparent',
-        transition: 'all 0.2s ease',
-        minHeight: '200px',
-      }}
-    >
-      <h2 style={{ fontSize: '18px', margin: '0 0 16px 0' }}>{column.title}</h2>
+  const columnClass = `${styles.column} ${isOver ? styles.isOver : ''}`;
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {column.cardIds.map((cardId) => {
-          const card = cardEntities[cardId];
-          return card ? <CardItem key={cardId} card={card} /> : null;
-        })}
-      </div>
+  return (
+    <div ref={setNodeRef} className={columnClass}>
+      <h2 className={styles.header}>{column.title}</h2>
+
+      <SortableContext
+        items={column.cardIds}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className={styles.cardsList}>
+          {column.cardIds.map((cardId) => {
+            const card = cardEntities[cardId];
+            return card ? <CardItem key={cardId} card={card} /> : null;
+          })}
+        </div>
+      </SortableContext>
+      <AddCardForm columnId={column.id} />
     </div>
   );
 }

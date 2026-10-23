@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@app/providers/store/hooks';
-import { addCard } from '@entities/card/model';
-import { addColumn, addCardToColumn, moveCard } from '@entities/column/model';
+import { addColumn, moveCard } from '@entities/column/model';
 import { ColumnItem } from '@entities/column/ui/ColumnItem';
 import { CardItem } from '@entities/card/ui/CardItem';
 import {
@@ -35,19 +34,6 @@ export function App() {
     }
   }, [dispatch, columnIds.length]);
 
-  const handleAddMockCard = () => {
-    const newCardId = crypto.randomUUID();
-    dispatch(
-      addCard({
-        id: newCardId,
-        title: 'Новая задача',
-        description: 'Описание',
-        createdAt: new Date().toISOString(),
-      })
-    );
-    dispatch(addCardToColumn({ columnId: 'todo', cardId: newCardId }));
-  };
-
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
@@ -55,44 +41,66 @@ export function App() {
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveId(null);
     const { active, over } = event;
-
     if (!over) return;
 
     const cardId = active.id as string;
-    const toColumnId = over.id as string;
+    const overId = over.id as string;
 
-    let fromColumnId: string | null = null;
-    for (const colId of columnIds) {
-      if (columnEntities[colId].cardIds.includes(cardId)) {
-        fromColumnId = colId;
-        break;
-      }
+    const fromColumnId = columnIds.find((colId) =>
+      columnEntities[colId].cardIds.includes(cardId)
+    );
+    if (!fromColumnId) return;
+
+    const isOverColumn = columnIds.includes(overId);
+    const toColumnId = isOverColumn
+      ? overId
+      : columnIds.find((colId) =>
+          columnEntities[colId].cardIds.includes(overId)
+        );
+    if (!toColumnId) return;
+
+    const fromIndex = columnEntities[fromColumnId].cardIds.indexOf(cardId);
+    let toIndex = columnEntities[toColumnId].cardIds.length;
+    if (!isOverColumn) {
+      toIndex = columnEntities[toColumnId].cardIds.indexOf(overId);
     }
 
-    if (fromColumnId && fromColumnId !== toColumnId) {
-      dispatch(moveCard({ fromColumnId, toColumnId, cardId }));
+    if (fromColumnId !== toColumnId || fromIndex !== toIndex) {
+      dispatch(
+        moveCard({ fromColumnId, toColumnId, fromIndex, toIndex, cardId })
+      );
     }
   };
 
   const activeCard = activeId ? cardEntities[activeId] : null;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Kanban Board</h1>
-
-      <button
-        onClick={handleAddMockCard}
-        style={{ padding: '8px 16px', cursor: 'pointer', marginBottom: '20px' }}
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <header
+        style={{
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+        }}
       >
-        Добавить карточку в To Do
-      </button>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>Kanban Board</h1>
+      </header>
 
       <DndContext
         sensors={sensors}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '16px',
+            alignItems: 'flex-start',
+            overflowX: 'auto',
+            paddingBottom: '20px',
+          }}
+        >
           {columnIds.map((id) => {
             const column = columnEntities[id];
             return column ? <ColumnItem key={id} column={column} /> : null;
