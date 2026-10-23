@@ -6,18 +6,20 @@ on:
   pull_request:
     branches: [main]
 
+permissions: { contents: read }
+
 jobs:
   lint-and-build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '26'
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: Install dependencies
