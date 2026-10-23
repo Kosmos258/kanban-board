@@ -43,21 +43,27 @@ export const columnSlice = createSlice({
       action: PayloadAction<{
         fromColumnId: string;
         toColumnId: string;
+        fromIndex: number;
+        toIndex: number;
         cardId: string;
       }>
     ) => {
-      const { fromColumnId, toColumnId, cardId } = action.payload;
+      const { fromColumnId, toColumnId, fromIndex, toIndex, cardId } =
+        action.payload;
 
       const fromColumn = state.entities[fromColumnId];
       const toColumn = state.entities[toColumnId];
 
-      if (fromColumn && toColumn && fromColumnId !== toColumnId) {
-        // 1. Удаляем ID из старой колонки
-        fromColumn.cardIds = fromColumn.cardIds.filter((id) => id !== cardId);
-        // 2. Добавляем ID в новую колонку
-        if (!toColumn.cardIds.includes(cardId)) {
-          toColumn.cardIds.push(cardId);
-        }
+      if (!fromColumn || !toColumn) return;
+
+      // Если перетаскиваем внутри одной колонки
+      if (fromColumnId === toColumnId) {
+        fromColumn.cardIds.splice(fromIndex, 1); // Вырезаем из старого места
+        fromColumn.cardIds.splice(toIndex, 0, cardId); // Вставляем в новое
+      } else {
+        // Если перетаскиваем в другую колонку
+        fromColumn.cardIds.splice(fromIndex, 1);
+        toColumn.cardIds.splice(toIndex, 0, cardId);
       }
     },
   },

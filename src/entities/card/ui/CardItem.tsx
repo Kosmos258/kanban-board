@@ -1,5 +1,7 @@
 import type { Card } from '../model/types';
-import { useDraggable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import styles from './CardItem.module.scss';
 
 interface CardItemProps {
   card: Card;
@@ -7,35 +9,42 @@ interface CardItemProps {
 }
 
 export function CardItem({ card, isOverlay = false }: CardItemProps) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: card.id,
-      disabled: isOverlay,
-    });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: card.id,
+    disabled: isOverlay,
+  });
 
   const style = {
-    border: '1px solid #ccc',
-    padding: '10px',
-    margin: '10px 0',
-    borderRadius: '4px',
-    backgroundColor: '#fff',
-    cursor: isOverlay ? 'grabbing' : 'grab',
-    opacity: isDragging && !isOverlay ? 0.4 : 1,
-    transform:
-      transform && !isOverlay
-        ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-        : undefined,
-    zIndex: isOverlay ? 999 : 1,
-    boxShadow: isOverlay ? '0 5px 15px rgba(0,0,0,0.15)' : 'none',
-    position: 'relative' as const,
+    transform: CSS.Transform.toString(transform),
+    transition,
   };
 
+  // Собираем классы: базовый + модификаторы
+  const classNames = [
+    styles.card,
+    isDragging && !isOverlay ? styles.isDragging : '',
+    isOverlay ? styles.isOverlay : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <h3 style={{ margin: '0 0 8px 0' }}>{card.title}</h3>
-      <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>
-        {card.description}
-      </p>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={classNames}
+      {...listeners}
+      {...attributes}
+    >
+      <h3 className={styles.title}>{card.title}</h3>
+      <p className={styles.description}>{card.description}</p>
     </div>
   );
 }
