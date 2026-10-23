@@ -38,8 +38,31 @@ export const columnSlice = createSlice({
         column.cardIds.push(cardId); // Immer позволяет нам мутировать массив напрямую
       }
     },
+    moveCard: (
+      state,
+      action: PayloadAction<{
+        fromColumnId: string;
+        toColumnId: string;
+        cardId: string;
+      }>
+    ) => {
+      const { fromColumnId, toColumnId, cardId } = action.payload;
+
+      const fromColumn = state.entities[fromColumnId];
+      const toColumn = state.entities[toColumnId];
+
+      if (fromColumn && toColumn && fromColumnId !== toColumnId) {
+        // 1. Удаляем ID из старой колонки
+        fromColumn.cardIds = fromColumn.cardIds.filter((id) => id !== cardId);
+        // 2. Добавляем ID в новую колонку
+        if (!toColumn.cardIds.includes(cardId)) {
+          toColumn.cardIds.push(cardId);
+        }
+      }
+    },
   },
 });
 
-export const { addColumn, removeColumn, addCardToColumn } = columnSlice.actions;
+export const { addColumn, removeColumn, addCardToColumn, moveCard } =
+  columnSlice.actions;
 export const columnReducer = columnSlice.reducer;

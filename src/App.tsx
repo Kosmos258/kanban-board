@@ -1,16 +1,31 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@app/providers/store/hooks';
 import { addCard } from '@entities/card/model';
-import { addColumn, addCardToColumn } from '@entities/column/model';
+import { addColumn, addCardToColumn, moveCard } from '@entities/column/model';
 import { ColumnItem } from '@entities/column/ui/ColumnItem';
+import { CardItem } from '@entities/card/ui/CardItem';
+import {
+  DndContext,
+  type DragEndEvent,
+  type DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from '@dnd-kit/core';
 
 export function App() {
   const dispatch = useAppDispatch();
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const columnIds = useAppSelector((state) => state.column.ids);
   const columnEntities = useAppSelector((state) => state.column.entities);
+  const cardEntities = useAppSelector((state) => state.card.entities);
 
-  // 👇 Инициализация: создаем две колонки при первом рендере (если их еще нет)
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
   useEffect(() => {
     if (columnIds.length === 0) {
       dispatch(addColumn({ id: 'todo', title: 'To Do', cardIds: [] }));
@@ -22,25 +37,44 @@ export function App() {
 
   const handleAddMockCard = () => {
     const newCardId = crypto.randomUUID();
-
-    // 1. Добавляем саму карточку в хранилище карточек
     dispatch(
       addCard({
         id: newCardId,
         title: 'Новая задача',
-        description: 'Описание задачи',
+        description: 'Описание',
         createdAt: new Date().toISOString(),
       })
     );
-
-    // 2. Говорим колонке "todo", что у неё появилась новая карточка
-    dispatch(
-      addCardToColumn({
-        columnId: 'todo',
-        cardId: newCardId,
-      })
-    );
+    dispatch(addCardToColumn({ columnId: 'todo', cardId: newCardId }));
   };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(null);
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const cardId = active.id as string;
+    const toColumnId = over.id as string;
+
+    let fromColumnId: string | null = null;
+    for (const colId of columnIds) {
+      if (columnEntities[colId].cardIds.includes(cardId)) {
+        fromColumnId = colId;
+        break;
+      }
+    }
+
+    if (fromColumnId && fromColumnId !== toColumnId) {
+      dispatch(moveCard({ fromColumnId, toColumnId, cardId }));
+    }
+  };
+
+  const activeCard = activeId ? cardEntities[activeId] : null;
 
   return (
     <div style={{ padding: '20px' }}>
@@ -53,13 +87,22 @@ export function App() {
         Добавить карточку в To Do
       </button>
 
-      {/* Рендерим колонки */}
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-        {columnIds.map((id) => {
-          const column = columnEntities[id];
-          return column ? <ColumnItem key={id} column={column} /> : null;
-        })}
-      </div>
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+          {columnIds.map((id) => {
+            const column = columnEntities[id];
+            return column ? <ColumnItem key={id} column={column} /> : null;
+          })}
+        </div>
+
+        <DragOverlay>
+          {activeCard ? <CardItem card={activeCard} isOverlay /> : null}
+        </DragOverlay>
+      </DndContext>
     </div>
   );
 }
