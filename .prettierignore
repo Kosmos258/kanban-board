@@ -2,5 +2,6 @@ dist
 build
 node_modules
 coverage
+server/src/generated
 .github/
 .husky/
