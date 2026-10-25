@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# Kanban Board
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Канбан-доска: колонки с карточками, перетаскивание карточек между колонками.
+Учебный проект, цель которого отработать архитектуру fullstack-приложения:
+структуру фронтенда по Feature-Sliced Design, REST API на Node.js и
+PostgreSQL в Docker.
 
-Currently, two official plugins are available:
+## Статус
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Проект в разработке.
 
-## React Compiler
+- Фронтенд: колонки и карточки, добавление карточек, drag and drop между колонками.
+  Состояние пока хранится в памяти (Redux Toolkit).
+- Бэкенд: каркас Express + Prisma, схема БД (Board, Column, Card) и первая миграция.
+  Работает проверка `GET /api/health`, CRUD-эндпоинтов пока нет.
+- Дальше: API для досок, колонок и карточек, подключение фронтенда к API
+  (RTK Query), тесты, запуск всего проекта одной командой через Docker.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Стек
 
-## Expanding the ESLint configuration
+| Слой     | Технологии                                                        |
+| -------- | ----------------------------------------------------------------- |
+| Frontend | React 19, TypeScript, Vite, Redux Toolkit, dnd-kit, SCSS          |
+| Backend  | Node.js, Express 5, TypeScript, Prisma 7 (adapter-pg)             |
+| База     | PostgreSQL 16 в Docker                                            |
+| Качество | ESLint, Prettier, Husky + lint-staged, GitHub Actions, Dependabot |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Запуск для разработки
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Нужны Node.js (версия из `.nvmrc`) и Docker Desktop.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**1. Переменные окружения**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+cp .env.example .env                # задай POSTGRES_PASSWORD
+cp server/.env.example server/.env  # пароль в DATABASE_URL должен совпадать
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+**2. База данных**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+docker compose up -d
 ```
+
+**3. Сервер** (в новом терминале)
+
+```bash
+cd server
+npm install
+npm run generate     # генерирует Prisma-клиент
+npm run migrate:dev  # применяет миграции
+npm run dev          # http://localhost:5000/api/health
+```
+
+**4. Фронтенд** (в корне проекта)
+
+```bash
+npm install
+npm run dev          # http://localhost:5173
+```
+
+## Скрипты
+
+В корне (фронтенд): `dev`, `build`, `lint`, `format`, `format:check`.
+В `server/`: `dev`, `typecheck`, `generate`, `migrate:dev`, `migrate:deploy`.
+
+## Структура фронтенда
+
+Проект организован по [Feature-Sliced Design](https://feature-sliced.design/):
+
+```
+src/
+  app/        # провайдеры, стор
+  entities/   # card, column, board: модели и UI-представление
+  features/   # пользовательские сценарии (например, add-card)
+```
+
+## Структура бэкенда
+
+```
+server/
+  prisma/       # schema.prisma и миграции
+  src/
+    config/     # чтение переменных окружения
+    lib/        # клиент Prisma
+    app.ts      # сборка Express-приложения
+    index.ts    # запуск сервера
+```
+
+`server/src/generated` (клиент Prisma) в git не хранится, он создаётся командой
+`npm run generate`.

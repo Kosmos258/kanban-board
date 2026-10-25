@@ -7,20 +7,32 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default defineConfig([
-  globalIgnores(['dist']), // Игнорируем папку dist
+  // Не линтим сборку и сгенерированный Prisma-клиент (он не наш код)
+  globalIgnores(['dist', 'server/src/generated']),
   {
-    files: ['**/*.{ts,tsx}'], // Применяем правила только к TS и TSX файлам
+    // Фронтенд: браузер + React
+    files: ['src/**/*.{ts,tsx}'],
     extends: [
-      js.configs.recommended, // Базовые правила JS
-      ...tseslint.configs.recommended, // Рекомендованные правила TS
-      reactHooks.configs.flat['recommended-latest'], // Правила для React Hooks
-      reactRefresh.configs.vite, // Правила для Fast Refresh в Vite
-      eslintConfigPrettier, // ОБЯЗАТЕЛЬНО ДОЛЖЕН БЫТЬ ПОСЛЕДНИМ, чтобы отключить конфликтующие правила
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      reactHooks.configs.flat['recommended-latest'],
+      reactRefresh.configs.vite,
+      eslintConfigPrettier, // ДОЛЖЕН БЫТЬ ПОСЛЕДНИМ, отключает правила, конфликтующие с Prettier
     ],
     languageOptions: {
-      globals: {
-        ...globals.browser, // Добавляем глобальные переменные браузера (window, document и т.д.)
-      },
+      globals: { ...globals.browser },
+    },
+  },
+  {
+    // Бэкенд и конфиги сборки: Node, без React
+    files: ['server/**/*.ts', '*.config.ts'],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      eslintConfigPrettier,
+    ],
+    languageOptions: {
+      globals: { ...globals.node },
     },
   },
 ]);
