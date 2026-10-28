@@ -34,5 +34,12 @@ export default defineConfig([
     languageOptions: {
       globals: { ...globals.node },
     },
+    rules: {
+      // Параметры с префиксом _ (например, _next в обработчике ошибок) намеренно не используются
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
+    },
   },
 ]);
