@@ -8,7 +8,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default defineConfig([
   // Не линтим сборку и сгенерированный Prisma-клиент (он не наш код)
-  globalIgnores(['dist', 'server/src/generated']),
+  globalIgnores(['dist', 'server/dist', 'server/src/generated']),
   {
     // Фронтенд: браузер + React
     files: ['src/**/*.{ts,tsx}'],
