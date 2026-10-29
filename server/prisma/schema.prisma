@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -9,26 +10,30 @@ datasource db {
 
 model Board {
   id        String   @id @default(uuid())
-  title     String
+  title     String   @db.VarChar(100)
   columns   Column[]
   createdAt DateTime @default(now())
 }
 
 model Column {
   id       String @id @default(uuid())
-  title    String
+  title    String @db.VarChar(100)
   boardId  String
   board    Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
   cards    Card[]
   position Int
+
+  @@index([boardId, position])
 }
 
 model Card {
   id          String   @id @default(uuid())
-  title       String
+  title       String   @db.VarChar(200)
   description String?
   columnId    String
   column      Column   @relation(fields: [columnId], references: [id], onDelete: Cascade)
   position    Int
   createdAt   DateTime @default(now())
+
+  @@index([columnId, position])
 }
