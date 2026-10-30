@@ -1,0 +1,30 @@
+.text,
+.input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+.input {
+  border: 1px solid var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  outline: none;
+}
