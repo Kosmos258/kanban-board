@@ -1,0 +1,13 @@
+.wrapper {
+  width: 300px;
+  flex-shrink: 0;
+  padding: 8px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+}
+
+@media (width <= 640px) {
+  .wrapper {
+    width: 82vw;
+  }
+}

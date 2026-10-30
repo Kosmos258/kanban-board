@@ -1,5 +1,9 @@
+import type { Card } from '@entities/card/@x/column';
+
 export interface Column {
   id: string;
   title: string;
-  cardIds: string[]; // только ID карточек в нужном порядке!
+  boardId: string;
+  position: number;
+  cards: Card[];
 }

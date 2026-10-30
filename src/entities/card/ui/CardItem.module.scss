@@ -1,42 +1,55 @@
 .card {
-  background-color: var(--card-bg);
-  border-radius: 6px;
-  padding: 12px;
-  box-shadow: var(--shadow);
-  cursor: grab;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-sm);
   transition:
-    transform 0.1s ease,
-    box-shadow 0.1s ease;
-  user-select: none; // Чтобы текст не выделялся при перетаскивании
-  border: 1px solid transparent;
+    border-color 0.15s,
+    box-shadow 0.15s;
 
   &:hover {
-    border-color: #dfe1e6;
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
   }
 }
 
-.title {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  word-wrap: break-word;
+.open {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  border-radius: inherit;
 }
 
-.description {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin: 0;
+.title {
+  min-width: 0;
+  overflow-wrap: anywhere;
   line-height: 1.4;
 }
 
-.isDragging {
-  opacity: 0.4;
+.icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--text-subtle);
+}
+
+.overlay {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lg);
+  transform: rotate(2deg);
   cursor: grabbing;
 }
 
-.isOverlay {
-  cursor: grabbing;
-  transform: rotate(3deg); // Легкий наклон, когда карточка летит (как в Trello)
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  z-index: 999;
+// Место, откуда карточку забрали: контур вместо содержимого
+.ghost {
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+.open {
+  // Браузер не должен прокручивать страницу, пока карточку тащат пальцем
+  touch-action: manipulation;
 }

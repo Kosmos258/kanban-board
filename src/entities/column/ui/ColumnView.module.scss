@@ -1,0 +1,49 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  max-height: 100%;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--surface-column);
+  transition: border-color 0.15s;
+}
+
+.over {
+  border-color: var(--accent);
+}
+
+.overlay {
+  max-height: 60vh;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transform: rotate(1.5deg);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 12px 8px 16px;
+  font-weight: 700;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 8px 8px;
+  overflow-y: auto;
+}
+
+.footer {
+  padding: 0 8px 8px;
+}
+
+@media (width <= 640px) {
+  .column {
+    width: 82vw;
+  }
+}

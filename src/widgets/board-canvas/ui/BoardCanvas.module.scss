@@ -1,0 +1,51 @@
+.canvas {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  height: 100%;
+  padding-bottom: 8px;
+  overflow-x: auto;
+}
+
+// Обёртка колонки, которую двигает dnd-kit. Высоту ограничиваем, чтобы длинные колонки скроллились внутри
+.columnSlot {
+  display: flex;
+  flex-shrink: 0;
+  max-height: 100%;
+
+  // Перетаскиваемая колонка остаётся на месте полупрозрачной тенью
+  &[data-dragging] {
+    opacity: 0.4;
+  }
+}
+
+.columnTitle {
+  flex: 1;
+  min-width: 0;
+  padding: 0 4px;
+  font-size: 15px;
+}
+
+.grip {
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.count {
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.overlayTitle {
+  padding-left: 4px;
+  font-size: 15px;
+}

@@ -1,0 +1,141 @@
+:root {
+  --font:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --header-height: 60px;
+  color-scheme: light;
+
+  --bg: #f4f5f9;
+  --surface: #ffffff;
+  --surface-hover: #eef0f6;
+  --surface-column: #e9ebf3;
+  --surface-card: #ffffff;
+  --border: #e2e5ef;
+  --border-strong: #cdd2e0;
+  --text: #171a2b;
+  --text-muted: #5a6078;
+  --text-subtle: #8b91a8;
+
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: rgb(79 70 229 / 14%);
+  --accent-contrast: #ffffff;
+
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --danger-soft: rgb(220 38 38 / 12%);
+  --success: #16a34a;
+
+  --shadow-sm: 0 1px 2px rgb(23 26 43 / 8%);
+  --shadow-md: 0 4px 12px rgb(23 26 43 / 10%);
+  --shadow-lg: 0 12px 32px rgb(23 26 43 / 18%);
+
+  --skeleton-base: #e4e7f0;
+  --skeleton-shine: #f3f4f9;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0f1120;
+  --surface: #181b2e;
+  --surface-hover: #22263c;
+  --surface-column: #1a1d33;
+  --surface-card: #262a48;
+  --border: #272b45;
+  --border-strong: #363b5c;
+  --text: #eceefa;
+  --text-muted: #a3a9c6;
+  --text-subtle: #70768f;
+
+  --accent: #7c75f5;
+  --accent-hover: #918bf8;
+  --accent-soft: rgb(124 117 245 / 20%);
+  --accent-contrast: #0f1120;
+
+  --danger: #f87171;
+  --danger-hover: #fca5a5;
+  --danger-soft: rgb(248 113 113 / 16%);
+  --success: #4ade80;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 40%);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 55%);
+
+  --skeleton-base: #22263c;
+  --skeleton-shine: #2d3250;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Единый видимый фокус для клавиатуры (мышью он не показывается)
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+// Для скринридеров: текст есть, на экране его нет
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

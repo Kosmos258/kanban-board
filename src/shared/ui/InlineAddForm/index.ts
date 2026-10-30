@@ -1,0 +1,1 @@
+export { InlineAddForm } from './InlineAddForm';
