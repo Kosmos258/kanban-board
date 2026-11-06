@@ -11,7 +11,6 @@ function readTheme(): Theme {
 }
 
 function subscribe(callback: () => void) {
-  // Тему меняем через атрибут на <html>, поэтому следим именно за ним
   const observer = new MutationObserver(callback);
   observer.observe(document.documentElement, {
     attributes: true,
@@ -28,7 +27,7 @@ export function useTheme() {
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
-      // Приватный режим или переполненное хранилище: тема просто не запомнится
+      //
     }
   }, []);
 

@@ -29,7 +29,6 @@
   overflow-wrap: anywhere;
 }
 
-// Растягиваем ссылку на всю карточку
 .link::after {
   content: '';
   position: absolute;

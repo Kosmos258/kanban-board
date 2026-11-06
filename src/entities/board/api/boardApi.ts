@@ -1,8 +1,6 @@
 import { baseApi } from '@shared/api';
 import type { Board, BoardSummary } from '../model/types';
 
-// Запросы на чтение живут в сущности. Изменяющие запросы лежат в features,
-// каждая фича добавляет свой эндпоинт через injectEndpoints
 export const boardApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getBoards: build.query<BoardSummary[], void>({

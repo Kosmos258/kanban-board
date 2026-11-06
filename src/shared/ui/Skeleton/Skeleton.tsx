@@ -8,7 +8,6 @@ interface SkeletonProps {
   className?: string;
 }
 
-// Серая «заглушка» на время загрузки. Скринридеру она не нужна
 export function Skeleton({ width, height = 16, className }: SkeletonProps) {
   return (
     <div

@@ -36,20 +36,18 @@ export function BoardCanvas({ board }: BoardCanvasProps) {
   const [openCardId, setOpenCardId] = useState<string | null>(null);
 
   const sensors = useSensors(
-    // Мышь начинает перетаскивание после сдвига на 5 пикселей, поэтому обычный клик работает
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-    // Палец: нужно задержать касание, иначе страница не прокручивалась бы
+
     useSensor(TouchSensor, {
       activationConstraint: { delay: 250, tolerance: 8 },
     }),
-    // Пробел берёт элемент. Enter не трогаем: он открывает карточку
+
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
       keyboardCodes: { start: ['Space'], cancel: ['Escape'], end: ['Space'] },
     })
   );
 
-  // Подсказки строятся по актуальной (черновой) доске, поэтому названия и позиции всегда свежие
   const announcements = createAnnouncements(view);
 
   const openCard =

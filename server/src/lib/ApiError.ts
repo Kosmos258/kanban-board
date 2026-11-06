@@ -1,4 +1,3 @@
-// Ошибка, которую мы выбрасываем сами, когда хотим вернуть клиенту конкретный статус
 export class ApiError extends Error {
   readonly status: number;
 

@@ -2,7 +2,6 @@ import { pool, prisma } from '../lib/prisma';
 
 const DEMO_TITLE = 'Демо-доска';
 
-// Повторный запуск безопасен: если демо-доска уже есть, ничего не создаём
 async function main() {
   const existing = await prisma.board.findFirst({
     where: { title: DEMO_TITLE },

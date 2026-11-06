@@ -17,7 +17,6 @@ export default defineConfig({
     },
   },
   server: {
-    // В разработке запросы к /api уходят на сервер, поэтому CORS не нужен
     proxy: { '/api': 'http://localhost:5000' },
   },
   test: {

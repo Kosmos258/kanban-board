@@ -43,13 +43,11 @@
   cursor: grabbing;
 }
 
-// Место, откуда карточку забрали: контур вместо содержимого
 .ghost {
   opacity: 0.4;
   border-style: dashed;
 }
 
 .open {
-  // Браузер не должен прокручивать страницу, пока карточку тащат пальцем
   touch-action: manipulation;
 }

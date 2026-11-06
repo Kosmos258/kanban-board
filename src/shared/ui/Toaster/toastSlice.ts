@@ -12,7 +12,6 @@ export const toastSlice = createSlice({
   reducers: {
     showToast: {
       reducer: (state, action: PayloadAction<Toast>) => {
-        // Не больше трёх сообщений сразу, старые вытесняются
         state.push(action.payload);
         if (state.length > 3) state.shift();
       },

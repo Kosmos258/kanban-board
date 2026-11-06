@@ -15,7 +15,6 @@ afterAll(async () => {
   await pool.end();
 });
 
-// Доска: [a, b, c] | [d] | []
 async function seeded() {
   const board = await createBoard();
   const [c0, c1, c2] = board.columns.map((c) => c.id) as [
@@ -81,7 +80,6 @@ describe('cards', () => {
     await expectContiguous(board.id);
   });
 
-  // Внутри колонки [a, b, c]: откуда, куда, результат
   const within: [number, number, string[]][] = [
     [0, 0, ['a', 'b', 'c']],
     [0, 2, ['b', 'c', 'a']],
@@ -107,7 +105,6 @@ describe('cards', () => {
     }
   );
 
-  // В другую колонку: карточка 'a' уходит в колонку 1 ([d]) или 2 ([])
   const across: [number, number, string[][]][] = [
     [1, 0, [['b', 'c'], ['a', 'd'], []]],
     [1, 1, [['b', 'c'], ['d', 'a'], []]],

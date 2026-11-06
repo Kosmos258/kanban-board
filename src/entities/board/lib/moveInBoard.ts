@@ -1,15 +1,12 @@
 import { clamp } from '@shared/lib';
 import type { Board } from '../model/types';
 
-// Позиции всегда 0..n-1 без дыр, как на сервере
 function renumber<T extends { position: number }>(items: T[]): T[] {
   return items.map((item, index) =>
     item.position === index ? item : { ...item, position: index }
   );
 }
 
-// Переносит карточку в колонку columnId на позицию position.
-// Логика зажима позиции совпадает с серверной: внутри колонки максимум n-1, в другой колонке n
 export function moveCardInBoard(
   board: Board,
   cardId: string,
@@ -27,7 +24,7 @@ export function moveCardInBoard(
 
   const without = source.cards.filter((k) => k.id !== cardId);
   const targetCards = sameColumn ? without : target.cards.slice();
-  // Внутри колонки список без карточки на единицу короче, поэтому max = длина без неё
+
   const index = clamp(
     position,
     sameColumn ? without.length : targetCards.length

@@ -20,7 +20,6 @@ export function AddCardForm({ boardId, columnId }: AddCardFormProps) {
           await addCard({ boardId, columnId, title }).unwrap();
           return true;
         } catch {
-          // Тост с ошибкой покажет общий обработчик
           return false;
         }
       }}

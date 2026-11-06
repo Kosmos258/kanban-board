@@ -3,7 +3,7 @@ import { moveCardInBoard, type Board } from '@entities/board';
 interface DropTarget {
   id: string;
   type: 'card' | 'column';
-  // Курсор в нижней половине карточки, над которой находимся
+
   isBelow: boolean;
 }
 
@@ -11,9 +11,6 @@ export function findColumnOfCard(board: Board, cardId: string) {
   return board.columns.find((c) => c.cards.some((k) => k.id === cardId));
 }
 
-// Куда попадёт карточка, если её отпустить над target. Чистая функция: удобно проверять тестами.
-// Между колонками карточка встаёт до или после карточки под курсором, внутри колонки
-// занимает её место (как arrayMove)
 export function dropCardOnTarget(
   board: Board,
   cardId: string,

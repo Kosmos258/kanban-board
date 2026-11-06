@@ -75,7 +75,7 @@ describe('moveCard (оптимистичное обновление)', () => {
         position: 0,
       })
     );
-    // Сервер ещё не ответил, а карточка уже в новой колонке
+
     expect(layout(store)).toEqual([['y'], ['x']]);
 
     release();

@@ -6,7 +6,7 @@ import styles from './BoardCard.module.scss';
 
 interface BoardCardProps {
   board: BoardSummary;
-  // Кнопки действий (например, удалить) подставляет страница
+
   actions?: ReactNode;
 }
 
