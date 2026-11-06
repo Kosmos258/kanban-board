@@ -115,13 +115,11 @@ a {
   text-decoration: none;
 }
 
-// Единый видимый фокус для клавиатуры (мышью он не показывается)
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-// Для скринридеров: текст есть, на экране его нет
 .visually-hidden {
   position: absolute;
   width: 1px;

@@ -8,12 +8,10 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
-  // Широкое окно, например для карточки с описанием
+
   wide?: boolean;
 }
 
-// Нативный <dialog>: браузер сам ловит фокус внутри окна, закрывает по Escape
-// и делает остальную страницу неактивной
 export function Modal({ open, onClose, title, children, wide }: ModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -32,7 +30,6 @@ export function Modal({ open, onClose, title, children, wide }: ModalProps) {
       aria-label={title}
       onClose={onClose}
       onClick={(event) => {
-        // Клик по затемнению попадает в сам <dialog>, а не в содержимое
         if (event.target === event.currentTarget) onClose();
       }}
     >

@@ -17,7 +17,6 @@ export function AddColumnForm({ boardId }: { boardId: string }) {
             await addColumn({ boardId, title }).unwrap();
             return true;
           } catch {
-            // Тост с ошибкой покажет общий обработчик
             return false;
           }
         }}

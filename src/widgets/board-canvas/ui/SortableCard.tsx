@@ -30,8 +30,7 @@ export function SortableCard({ card, onOpen }: SortableCardProps) {
         card={card}
         isGhost={isDragging}
         onOpen={() => onOpen(card.id)}
-        // Ручкой служит сама кнопка карточки: тогда с клавиатуры Пробел берёт карточку,
-        // а Enter по-прежнему открывает её
+
         openButtonRef={setActivatorNodeRef}
         openButtonProps={{ ...attributes, ...listeners }}
       />

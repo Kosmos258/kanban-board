@@ -1,7 +1,6 @@
 import type { Announcements, ScreenReaderInstructions } from '@dnd-kit/core';
 import type { Board } from '@entities/board';
 
-// Тексты для скринридеров: что взяли, над чем находимся и куда положили
 export function createAnnouncements(board: Board): Announcements {
   const describe = (id: string | number) => {
     const column = board.columns.find((c) => c.id === id);
@@ -13,7 +12,6 @@ export function createAnnouncements(board: Board): Announcements {
     return 'элемент';
   };
 
-  // Позиция «3 из 5» считается по текущему порядку на доске
   const place = (id: string | number) => {
     const columnIndex = board.columns.findIndex((c) => c.id === id);
     if (columnIndex !== -1) {

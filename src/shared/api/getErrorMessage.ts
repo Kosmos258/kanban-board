@@ -1,4 +1,3 @@
-// Превращает любую ошибку RTK Query в понятный текст для пользователя
 export function getErrorMessage(error: unknown): string {
   if (typeof error === 'object' && error !== null) {
     const e = error as { status?: unknown; data?: unknown; error?: unknown };

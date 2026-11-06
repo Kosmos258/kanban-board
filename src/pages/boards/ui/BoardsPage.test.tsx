@@ -24,7 +24,6 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 function renderPage() {
-  // Страница не знает про слой app, поэтому собираем минимальный стор сами
   const store = configureStore({
     reducer: { [baseApi.reducerPath]: baseApi.reducer, toast: toastReducer },
     middleware: (getDefault) => getDefault().concat(baseApi.middleware),

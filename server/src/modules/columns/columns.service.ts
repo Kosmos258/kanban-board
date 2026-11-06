@@ -7,8 +7,6 @@ import type {
   UpdateColumnInput,
 } from './columns.schemas';
 
-// Находим доску колонки. Сам результат может устареть к моменту блокировки,
-// поэтому внутри транзакции колонка читается заново
 async function findBoardId(columnId: string): Promise<string> {
   const column = await prisma.column.findUnique({
     where: { id: columnId },

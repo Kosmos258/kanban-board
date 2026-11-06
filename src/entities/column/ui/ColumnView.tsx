@@ -3,7 +3,6 @@ import { cn } from '@shared/lib';
 import styles from './ColumnView.module.scss';
 
 interface ColumnViewProps {
-  // Заголовок и действия приходят снаружи: переименование и удаление живут в features
   header: ReactNode;
   children: ReactNode;
   footer?: ReactNode;

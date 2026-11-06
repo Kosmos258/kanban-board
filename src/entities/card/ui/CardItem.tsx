@@ -6,18 +6,16 @@ import styles from './CardItem.module.scss';
 
 interface CardItemProps {
   card: Card;
-  // Для карточки в DragOverlay и для подсветки «призрака» на месте перетаскивания
+
   isOverlay?: boolean;
   isGhost?: boolean;
   onOpen?: () => void;
-  // Кнопка карточки одновременно служит «ручкой» перетаскивания.
-  // Нужные атрибуты и обработчики приходят снаружи (из features и widgets)
+
   openButtonRef?: Ref<HTMLButtonElement>;
   openButtonProps?: ComponentProps<'button'>;
   className?: string;
 }
 
-// Только внешний вид. Само перетаскивание навешивают снаружи
 export function CardItem({
   card,
   isOverlay,

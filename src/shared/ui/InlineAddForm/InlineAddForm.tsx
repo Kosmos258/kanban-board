@@ -10,13 +10,11 @@ interface InlineAddFormProps {
   placeholder: string;
   submitLabel: string;
   maxLength: number;
-  // Должна вернуть true, если элемент создан: тогда поле очищается и остаётся открытым
+
   onSubmit: (title: string) => Promise<boolean> | boolean;
   className?: string;
 }
 
-// Кнопка «+ Добавить…», которая раскрывается в строку ввода.
-// Enter добавляет и оставляет поле открытым, чтобы можно было вводить подряд, Escape закрывает
 export function InlineAddForm({
   triggerLabel,
   placeholder,

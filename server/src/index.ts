@@ -6,7 +6,6 @@ const server = createApp().listen(env.port, () => {
   console.log(`Server is running on http://localhost:${env.port}`);
 });
 
-// Корректное завершение: дожидаемся текущих запросов и закрываем соединения с базой
 let shuttingDown = false;
 async function shutdown(signal: string) {
   if (shuttingDown) return;
@@ -17,7 +16,7 @@ async function shutdown(signal: string) {
     await pool.end();
     process.exit(0);
   });
-  // Если что-то зависло, не ждём бесконечно
+
   setTimeout(() => process.exit(1), 10_000).unref();
 }
 

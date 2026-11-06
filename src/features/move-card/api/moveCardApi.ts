@@ -17,8 +17,7 @@ export const moveCardApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body: { columnId, position },
       }),
-      // Оптимистичное обновление: интерфейс меняется сразу, не дожидаясь сервера.
-      // Если сервер отказал, возвращаем кэш как было и перезапрашиваем доску
+
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         const patch = dispatch(
           boardApi.util.updateQueryData('getBoard', arg.boardId, (draft) => {
@@ -28,7 +27,7 @@ export const moveCardApi = baseApi.injectEndpoints({
               arg.columnId,
               arg.position
             );
-            // Immer ждёт либо изменения draft, либо новый объект: заменяем содержимое
+
             draft.columns = next.columns;
           })
         );

@@ -83,7 +83,6 @@ export async function moveCard(cardId: string, input: MoveCardInput) {
       throw new ApiError(400, 'Нельзя переместить карточку на другую доску');
     }
 
-    // Внутри одной колонки карточка уже занимает место, поэтому последний индекс на единицу меньше
     if (card.columnId === target.id) {
       const count = await tx.card.count({ where: { columnId: target.id } });
       const from = card.position;
@@ -104,7 +103,7 @@ export async function moveCard(cardId: string, input: MoveCardInput) {
 
     const targetCount = await tx.card.count({ where: { columnId: target.id } });
     const to = clamp(input.position, targetCount);
-    // Закрываем дыру в старой колонке и освобождаем место в новой
+
     await tx.card.updateMany({
       where: { columnId: card.columnId, position: { gt: card.position } },
       data: { position: { decrement: 1 } },

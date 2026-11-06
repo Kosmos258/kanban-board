@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import type { Board } from '@entities/board';
 import { dropCardOnTarget } from './dropCard';
 
-// [a, b, c] | [d, e] | []
 function makeBoard(): Board {
   const card = (title: string, columnId: string, position: number) => ({
     id: title,

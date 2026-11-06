@@ -37,7 +37,6 @@ function ToastItem({ toast }: { toast: Toast }) {
 }
 
 export function Toaster() {
-  // Тип стора здесь неизвестен (shared не знает про app), поэтому читаем только свой кусок
   const toasts = useSelector((state: { toast: Toast[] }) => state.toast);
 
   return (

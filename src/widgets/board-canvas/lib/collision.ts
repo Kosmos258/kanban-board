@@ -5,8 +5,6 @@ import {
   type CollisionDetection,
 } from '@dnd-kit/core';
 
-// Колонки сравниваем только с колонками, а карточки сначала привязываем к колонке под курсором.
-// Так карточку можно бросить и в пустую колонку, и между другими карточками
 export const collisionDetection: CollisionDetection = (args) => {
   const activeType = args.active.data.current?.type;
 
@@ -19,7 +17,6 @@ export const collisionDetection: CollisionDetection = (args) => {
     });
   }
 
-  // Мышь и палец дают координаты курсора. У клавиатуры их нет, тогда смотрим на пересечение
   const pointerHits = pointerWithin(args);
   const hits = pointerHits.length > 0 ? pointerHits : rectIntersection(args);
   const columnHit = hits.find(

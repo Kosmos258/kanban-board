@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import type { Board } from '../model/types';
 import { moveCardInBoard, moveColumnInBoard } from './moveInBoard';
 
-// Доска из серверных тестов: [a, b, c] | [d] | []
 function makeBoard(): Board {
   const card = (title: string, columnId: string, position: number) => ({
     id: title,

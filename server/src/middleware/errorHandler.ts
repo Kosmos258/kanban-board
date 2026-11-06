@@ -2,7 +2,6 @@ import type { ErrorRequestHandler, RequestHandler } from 'express';
 import { ZodError } from 'zod';
 import { ApiError } from '../lib/ApiError';
 
-// Ошибки самого Express и body-parser (например, битый JSON): это вина клиента, а не сервера
 function isClientHttpError(
   err: unknown
 ): err is { status: number; message: string } {
@@ -20,7 +19,6 @@ function isClientHttpError(
   );
 }
 
-// База недоступна: сервер жив, но работать не может. Это 503, а не 500
 const DB_DOWN_CODES = new Set([
   'ECONNREFUSED',
   'ECONNRESET',
@@ -33,7 +31,6 @@ const DB_DOWN_CODES = new Set([
 ]);
 
 function isDatabaseDown(err: unknown): boolean {
-  // Ошибка может быть обёрнута (cause), поэтому идём по цепочке
   let current: unknown = err;
   for (let depth = 0; depth < 5 && current; depth++) {
     if (typeof current === 'object' && current !== null) {
@@ -57,12 +54,10 @@ function isDatabaseDown(err: unknown): boolean {
   return false;
 }
 
-// Срабатывает, если ни один маршрут не подошёл
 export const notFoundHandler: RequestHandler = (_req, res) => {
   res.status(404).json({ error: 'Not found' });
 };
 
-// Express узнаёт обработчик ошибок только по четырём параметрам, поэтому _next нужен, хоть мы им и не пользуемся
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof ZodError) {
     res.status(400).json({ error: 'Validation failed', issues: err.issues });
@@ -85,7 +80,6 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     return;
   }
 
-  // Неожиданная ошибка: подробности только в логе сервера, клиенту общий ответ
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
 };

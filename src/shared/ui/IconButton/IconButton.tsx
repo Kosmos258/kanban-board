@@ -3,7 +3,6 @@ import { cn } from '@shared/lib';
 import styles from './IconButton.module.scss';
 
 interface IconButtonProps extends Omit<ComponentProps<'button'>, 'aria-label'> {
-  // У кнопки без текста должно быть имя для скринридера, поэтому поле обязательное
   'aria-label': string;
   tone?: 'default' | 'danger';
 }

@@ -18,8 +18,6 @@ function isBelow(event: DragOverEvent | DragEndEvent): boolean {
   return translated.top > over.rect.top + over.rect.height / 2;
 }
 
-// Во время перетаскивания карточки показываем «черновик» доски (draft) и не трогаем кэш:
-// сервер получает один запрос в конце, а не по запросу на каждый сантиметр движения
 export function useBoardDnd(board: Board) {
   const [draft, setDraft] = useState<Board | null>(null);
   const [active, setActive] = useState<ActiveItem | null>(null);
@@ -41,8 +39,6 @@ export function useBoardDnd(board: Board) {
     setDraft(board);
   }
 
-  // Переход карточки в другую колонку происходит сразу, на лету. Порядок внутри колонки
-  // dnd-kit анимирует сам, а фиксируем его в конце
   function handleDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (!over || active.data.current?.type !== 'card') return;
@@ -59,7 +55,7 @@ export function useBoardDnd(board: Board) {
       const from = findColumnOfCard(prev, String(active.id));
       const next = dropCardOnTarget(prev, String(active.id), target);
       const to = findColumnOfCard(next, String(active.id));
-      // Внутри одной колонки ничего не меняем до отпускания
+
       return from && to && from.id !== to.id ? next : prev;
     });
   }
@@ -98,7 +94,6 @@ export function useBoardDnd(board: Board) {
     if (!column || !original) return;
     const position = column.cards.findIndex((c) => c.id === cardId);
 
-    // Вернули на то же место: запрос не нужен
     if (original.columnId === column.id && original.position === position)
       return;
 

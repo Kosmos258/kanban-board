@@ -5,14 +5,12 @@ import styles from './InlineEdit.module.scss';
 interface InlineEditProps {
   value: string;
   onSave: (value: string) => void;
-  // Имя для скринридера: «Название доски», «Название колонки»
+
   label: string;
   maxLength?: number;
   className?: string;
 }
 
-// Текст, который по клику превращается в поле ввода.
-// Enter или потеря фокуса сохраняют, Escape отменяет
 export function InlineEdit({
   value,
   onSave,
@@ -22,7 +20,7 @@ export function InlineEdit({
 }: InlineEditProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(value);
-  // Escape и blur срабатывают подряд: флаг не даёт сохранить отменённое
+
   const cancelled = useRef(false);
 
   function start() {

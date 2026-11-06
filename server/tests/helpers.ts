@@ -25,7 +25,6 @@ export async function createCard(columnId: string, title: string) {
   return res.body as { id: string; columnId: string; position: number };
 }
 
-// Состояние доски как простой массив названий: [[карточки 1-й колонки], [2-й], ...]
 export async function layout(boardId: string): Promise<string[][]> {
   const res = await api().get(`/api/boards/${boardId}`).expect(200);
   return res.body.columns.map((c: { cards: { title: string }[] }) =>
@@ -38,7 +37,6 @@ export async function columnTitles(boardId: string): Promise<string[]> {
   return res.body.columns.map((c: { title: string }) => c.title);
 }
 
-// Проверка инварианта: позиции идут 0..n-1 без дыр и повторов
 export async function expectContiguous(boardId: string) {
   const res = await api().get(`/api/boards/${boardId}`).expect(200);
   const cols = res.body.columns as {
