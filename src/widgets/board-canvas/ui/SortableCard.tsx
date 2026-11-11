@@ -1,13 +1,16 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { CardItem, type Card } from '@entities/card';
+import { useSaveCardDescription } from '@features/edit-card';
 
 interface SortableCardProps {
   card: Card;
+  boardId: string;
   onOpen: (cardId: string) => void;
 }
 
-export function SortableCard({ card, onOpen }: SortableCardProps) {
+export function SortableCard({ card, boardId, onOpen }: SortableCardProps) {
+  const saveDescription = useSaveCardDescription(boardId);
   const {
     attributes,
     listeners,
@@ -30,6 +33,9 @@ export function SortableCard({ card, onOpen }: SortableCardProps) {
         card={card}
         isGhost={isDragging}
         onOpen={() => onOpen(card.id)}
+        onSaveDescription={(description) =>
+          saveDescription(card.id, description)
+        }
 
         openButtonRef={setActivatorNodeRef}
         openButtonProps={{ ...attributes, ...listeners }}
