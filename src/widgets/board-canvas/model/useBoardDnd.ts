@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type {
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
 } from '@dnd-kit/core';
-import type { Board } from '@entities/board';
+import { moveColumnInBoard, type Board } from '@entities/board';
 import { useMoveCardMutation } from '@features/move-card';
 import { useMoveColumnMutation } from '@features/move-column';
 import { dropCardOnTarget, findColumnOfCard } from '../lib/dropCard';
@@ -24,14 +24,37 @@ export function useBoardDnd(board: Board) {
   const [moveCard] = useMoveCardMutation();
   const [moveColumn] = useMoveColumnMutation();
 
+  const [settlingFrom, setSettlingFrom] = useState<Board | null>(null);
+  const dragSeq = useRef(0);
+
+  if (settlingFrom && board !== settlingFrom) {
+    setSettlingFrom(null);
+    setDraft(null);
+  }
+
   const view = draft ?? board;
 
   function reset() {
     setActive(null);
     setDraft(null);
+    setSettlingFrom(null);
+  }
+
+  function settle(final: Board, request: PromiseLike<unknown>) {
+    const seq = ++dragSeq.current;
+    setActive(null);
+    setDraft(final);
+    setSettlingFrom(board);
+    void request.then(() => {
+      if (dragSeq.current !== seq) return;
+      setSettlingFrom(null);
+      setDraft(null);
+    });
   }
 
   function handleDragStart({ active }: DragStartEvent) {
+    dragSeq.current += 1;
+    setSettlingFrom(null);
     setActive({
       id: String(active.id),
       type: active.data.current?.type === 'column' ? 'column' : 'card',
@@ -63,18 +86,26 @@ export function useBoardDnd(board: Board) {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     const current = draft ?? board;
-    reset();
 
     if (active.data.current?.type === 'column') {
-      if (!over || over.id === active.id) return;
-      const position = board.columns.findIndex((c) => c.id === over.id);
+      const position = over
+        ? board.columns.findIndex((c) => c.id === over.id)
+        : -1;
       const from = board.columns.findIndex((c) => c.id === active.id);
-      if (position === -1 || position === from) return;
-      void moveColumn({
-        boardId: board.id,
-        columnId: String(active.id),
-        position,
-      });
+      if (
+        !over ||
+        over.id === active.id ||
+        position === -1 ||
+        position === from
+      ) {
+        reset();
+        return;
+      }
+      const columnId = String(active.id);
+      settle(
+        moveColumnInBoard(board, columnId, position),
+        moveColumn({ boardId: board.id, columnId, position })
+      );
       return;
     }
 
@@ -91,13 +122,21 @@ export function useBoardDnd(board: Board) {
     const original = findColumnOfCard(board, cardId)?.cards.find(
       (c) => c.id === cardId
     );
-    if (!column || !original) return;
+    if (!column || !original) {
+      reset();
+      return;
+    }
     const position = column.cards.findIndex((c) => c.id === cardId);
 
-    if (original.columnId === column.id && original.position === position)
+    if (original.columnId === column.id && original.position === position) {
+      reset();
       return;
+    }
 
-    void moveCard({ boardId: board.id, cardId, columnId: column.id, position });
+    settle(
+      final,
+      moveCard({ boardId: board.id, cardId, columnId: column.id, position })
+    );
   }
 
   return {
