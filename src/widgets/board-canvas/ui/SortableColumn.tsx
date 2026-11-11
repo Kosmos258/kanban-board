@@ -69,7 +69,12 @@ export function SortableColumn({ column, onOpenCard }: SortableColumnProps) {
           strategy={verticalListSortingStrategy}
         >
           {column.cards.map((card) => (
-            <SortableCard key={card.id} card={card} onOpen={onOpenCard} />
+            <SortableCard
+              key={card.id}
+              card={card}
+              boardId={column.boardId}
+              onOpen={onOpenCard}
+            />
           ))}
         </SortableContext>
       </ColumnView>

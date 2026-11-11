@@ -1,7 +1,7 @@
 import type { ComponentProps, Ref } from 'react';
-import { AlignLeft } from 'lucide-react';
 import { cn } from '@shared/lib';
 import type { Card } from '../model/types';
+import { CardDescription } from './CardDescription';
 import styles from './CardItem.module.scss';
 
 interface CardItemProps {
@@ -10,6 +10,8 @@ interface CardItemProps {
   isOverlay?: boolean;
   isGhost?: boolean;
   onOpen?: () => void;
+  /** Сохранение описания прямо на карточке. Без него описание только читается */
+  onSaveDescription?: (value: string | null) => Promise<unknown> | void;
 
   openButtonRef?: Ref<HTMLButtonElement>;
   openButtonProps?: ComponentProps<'button'>;
@@ -21,6 +23,7 @@ export function CardItem({
   isOverlay,
   isGhost,
   onOpen,
+  onSaveDescription,
   openButtonRef,
   openButtonProps,
   className,
@@ -33,6 +36,9 @@ export function CardItem({
         isGhost && styles.ghost,
         className
       )}
+      data-with-description={
+        onSaveDescription || card.description ? '' : undefined
+      }
     >
       <button
         type="button"
@@ -43,14 +49,8 @@ export function CardItem({
         ref={openButtonRef}
       >
         <span className={styles.title}>{card.title}</span>
-        {card.description && (
-          <AlignLeft
-            size={14}
-            className={styles.icon}
-            aria-label="Есть описание"
-          />
-        )}
       </button>
+      <CardDescription value={card.description} onSave={onSaveDescription} />
     </div>
   );
 }

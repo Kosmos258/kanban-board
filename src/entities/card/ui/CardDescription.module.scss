@@ -1,0 +1,91 @@
+.display,
+.static {
+  display: block;
+  width: calc(100% - 12px);
+  margin: 0 6px 6px;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.static {
+  cursor: default;
+}
+
+.display {
+  cursor: text;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+}
+
+// Не больше трёх строк, дальше текст плавно растворяется
+.text {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+  color: var(--text-muted);
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  &[data-clamped] {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - 1.6em),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 calc(100% - 1.6em),
+      transparent
+    );
+  }
+}
+
+.placeholder {
+  color: var(--text-subtle);
+  opacity: 0.75;
+}
+
+.editor {
+  margin: 0 6px 6px;
+}
+
+.textarea {
+  display: block;
+  width: 100%;
+  min-height: 64px;
+  max-height: 240px;
+  padding: 6px 8px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  font-size: 13px;
+  line-height: 1.4;
+  resize: none;
+  overflow-y: auto;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.hint {
+  display: block;
+  margin-top: 4px;
+  padding-left: 2px;
+  font-size: 11px;
+  color: var(--text-subtle);
+}
